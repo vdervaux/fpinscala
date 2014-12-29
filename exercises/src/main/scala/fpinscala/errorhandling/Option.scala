@@ -81,6 +81,7 @@ object Option {
     } */
     a flatMap (aa => b map (bb => f(aa, bb)))
 
+  
   // 4.4 sequence
 
   def sequence[A](a: List[Option[A]]): Option[List[A]] =
@@ -92,11 +93,12 @@ object Option {
     */
     a.foldRight[Option[List[A]]](Some(Nil))((x, y) => map2(x, y)(_ :: _))
 
+    
   // 4.5 traverse
 
   def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] =
     a match {
-      case Nil => None
+      case Nil => Some(Nil)
       case h :: t => map2(f(h), traverse(t)(f))(_ :: _)
     
     // h: A

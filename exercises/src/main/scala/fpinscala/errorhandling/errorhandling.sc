@@ -49,4 +49,23 @@ object errorhandling {
   Some(1) filter(x => x > 0)                      //> res14: fpinscala.errorhandling.Option[Int] = Some(1)
   Some(-1) filter(x => x > 0)                     //> res15: fpinscala.errorhandling.Option[Int] = None
   (None: Option[Int]) filter(x => x > 0)          //> res16: fpinscala.errorhandling.Option[Int] = None
+  
+  
+  // traverse test
+  
+  val l1 = List(1, 2, 3, 4, 5)                    //> l1  : List[Int] = List(1, 2, 3, 4, 5)
+  val l2 = List(1, 2, 3, 0, 5)                    //> l2  : List[Int] = List(1, 2, 3, 0, 5)
+  
+  def plusOne(x: Int): Option[Int] = {
+    Some(x + 1)
+  }                                               //> plusOne: (x: Int)fpinscala.errorhandling.Option[Int]
+  
+  traverse(l1)(plusOne)                           //> res17: fpinscala.errorhandling.Option[List[Int]] = Some(List(2, 3, 4, 5, 6))
+                                                  //| 
+  traverse(l1)(divide100)                         //> res18: fpinscala.errorhandling.Option[List[Int]] = Some(List(100, 50, 33, 2
+                                                  //| 5, 20))
+  
+  traverse(l2)(plusOne)                           //> res19: fpinscala.errorhandling.Option[List[Int]] = Some(List(2, 3, 4, 1, 6)
+                                                  //| )
+  traverse(l2)(divide100)                         //> res20: fpinscala.errorhandling.Option[List[Int]] = None
 }
