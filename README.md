@@ -1,3 +1,10 @@
+
+Working through the book Functional Programming in Scala
+
+This is a fork of https://github.com/fpinscala/fpinscala.
+
+<!-- 
+
 ![Build status](https://travis-ci.org/fpinscala/fpinscala.svg?branch=master)
 
 This repository contains exercises, hints, and answers for the book [Functional Programming in Scala](http://manning.com/bjarnason/). Along with the book itself, it's the closest you'll get to having your own private functional programming tutor without actually having one.
@@ -54,3 +61,5 @@ All code in this repository is [MIT-licensed](http://opensource.org/licenses/mit
 Have fun, and good luck! Also be sure to check out [the community wiki](https://github.com/fpinscala/fpinscala/wiki) for the **chapter notes**, links to more reading, and more.
 
 _Paul and Rúnar_
+
+-->
