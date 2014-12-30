@@ -35,7 +35,7 @@ object errorhandling {
   
   Some(2).flatMap(divide100)                      //> res9: fpinscala.errorhandling.Option[Int] = Some(50)
   Some(0).flatMap(divide100)                      //> res10: fpinscala.errorhandling.Option[Int] = None
-  
+ 
   // orElse
   
   None.orElse(Some(0))                            //> res11: fpinscala.errorhandling.Option[Int] = Some(0)
@@ -82,7 +82,7 @@ import Either._
   
   traverse(l2)(safeDiv100By)                      //> res22: fpinscala.errorhandling.Either[Exception,List[Int]] = Left(java.lang
                                                   //| .ArithmeticException: / by zero)
-// Either traverse test
+// Either sequence test
 
   l1 map safeDiv100By                             //> res23: List[fpinscala.errorhandling.Either[Exception,Int]] = List(Right(100
                                                   //| ), Right(50), Right(33), Right(25), Right(20))
