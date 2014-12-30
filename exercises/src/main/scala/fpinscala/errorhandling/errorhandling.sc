@@ -3,8 +3,7 @@ package fpinscala.errorhandling
 import Option._
 
 object errorhandling {
-  println("Welcome to the Scala worksheet")       //> Welcome to the Scala worksheet
-  
+
   // map
   
   Some(1)                                         //> res0: fpinscala.errorhandling.Some[Int] = Some(1)
@@ -62,10 +61,37 @@ object errorhandling {
   
   traverse(l1)(plusOne)                           //> res17: fpinscala.errorhandling.Option[List[Int]] = Some(List(2, 3, 4, 5, 6))
                                                   //| 
-  traverse(l1)(divide100)                         //> res18: fpinscala.errorhandling.Option[List[Int]] = Some(List(100, 50, 33, 2
-                                                  //| 5, 20))
+  traverse(l1)(divide100)                         //> res18: fpinscala.errorhandling.Option[List[Int]] = Some(List(100, 50, 33, 25
+                                                  //| , 20))
   
   traverse(l2)(plusOne)                           //> res19: fpinscala.errorhandling.Option[List[Int]] = Some(List(2, 3, 4, 1, 6)
                                                   //| )
   traverse(l2)(divide100)                         //> res20: fpinscala.errorhandling.Option[List[Int]] = None
+
+
+import Either._
+
+  def safeDiv100By(x: Int): Either[Exception, Int] =
+    try Right(100 / x)
+    catch { case e: Exception => Left(e) }        //> safeDiv100By: (x: Int)fpinscala.errorhandling.Either[Exception,Int]
+  
+// Either traverse test
+  
+  traverse(l1)(safeDiv100By)                      //> res21: fpinscala.errorhandling.Either[Exception,List[Int]] = Right(List(100
+                                                  //| , 50, 33, 25, 20))
+  
+  traverse(l2)(safeDiv100By)                      //> res22: fpinscala.errorhandling.Either[Exception,List[Int]] = Left(java.lang
+                                                  //| .ArithmeticException: / by zero)
+// Either traverse test
+
+  l1 map safeDiv100By                             //> res23: List[fpinscala.errorhandling.Either[Exception,Int]] = List(Right(100
+                                                  //| ), Right(50), Right(33), Right(25), Right(20))
+  l2 map safeDiv100By                             //> res24: List[fpinscala.errorhandling.Either[Exception,Int]] = List(Right(100
+                                                  //| ), Right(50), Right(33), Left(java.lang.ArithmeticException: / by zero), Ri
+                                                  //| ght(20))
+
+  sequence(l1 map safeDiv100By)                   //> res25: fpinscala.errorhandling.Either[Exception,List[Int]] = Right(List(100
+                                                  //| , 50, 33, 25, 20))
+  sequence(l2 map safeDiv100By)                   //> res26: fpinscala.errorhandling.Either[Exception,List[Int]] = Left(java.lang
+                                                  //| .ArithmeticException: / by zero)
 }
