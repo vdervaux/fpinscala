@@ -101,12 +101,19 @@ trait Stream[+A] {
     }
 
 
+  // 5.3
+  
+  //
+  // takeWhile
+  //
+  
+  def takeWhile(p: A => Boolean): Stream[A] =
+    this match {
+      case Cons(h, t) if p(h()) => cons(h(), t() takeWhile p)
+      case _ => Empty
+    }
   
   
-  
-
-  def takeWhile(p: A => Boolean): Stream[A] = sys.error("todo")
-
   def forAll(p: A => Boolean): Boolean = sys.error("todo")
 
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
