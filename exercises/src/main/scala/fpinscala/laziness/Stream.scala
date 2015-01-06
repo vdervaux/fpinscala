@@ -43,10 +43,14 @@ trait Stream[+A] {
 
   // 5.2
 
+  //
+  // Take
+  //
+  
   def take(n: Int): Stream[A] =
     if (n <= 0) Empty
     else this match {
-      case Empty => sys.error("take on empty list")
+      case Empty => sys.error("take on empty stream")
       case Cons(h, t) => cons(h(), t().take(n - 1))
     }
 
@@ -61,8 +65,45 @@ trait Stream[+A] {
     go(this, n, Empty)
   }
   
+  //
+  // Drop
+  //
 
-  def drop(n: Int): Stream[A] = sys.error("todo")
+  // Non tail recursive version
+  def dropNotTailRec(n: Int): Stream[A] = 
+    if (n <= 0) this
+    else this match {
+      case Empty => sys.error("drop on empty stream")
+      case Cons(h, t) => t().dropNotTailRec(n - 1)
+    }
+
+  // Tail recursive version using a helper method
+  def dropTailRec1(n: Int): Stream[A] = {
+    @annotation.tailrec
+    def go(s: Stream[A], n: Int): Stream[A] = {
+      if (n <= 0) s
+      else s match {
+        case Empty => sys.error("drop on empty stream")
+        case Cons(h, t) => go(t(), n - 1)
+      }
+    }
+    go(this, n)
+  } 
+  
+  // To allow the method to be tail recursive: make it final
+  // no real need for a helper function
+  @annotation.tailrec
+  final def drop(n: Int): Stream[A] = 
+    if (n <= 0) this
+    else this match {
+      case Empty => sys.error("drop on empty stream")
+      case Cons(h, t) => t().drop(n - 1)
+    }
+
+
+  
+  
+  
 
   def takeWhile(p: A => Boolean): Stream[A] = sys.error("todo")
 
