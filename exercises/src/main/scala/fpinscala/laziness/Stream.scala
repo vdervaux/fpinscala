@@ -113,8 +113,32 @@ trait Stream[+A] {
       case _ => Empty
     }
   
+  //
+  // 5.4
+  //
   
-  def forAll(p: A => Boolean): Boolean = sys.error("todo")
+  def forAll(p: A => Boolean): Boolean = 
+    this match {
+    case Cons(h, t) => p(h()) && (t() forAll p)
+    case _ => true
+  }
+  
+  //
+  // 5.4
+  //
+  
+  def takeWhileUsingFoldRight(p: A => Boolean): Stream[A] =
+    // simplified template foldRight(z: B)((a: A, b: B) => B)
+    // so B is Stream[A]
+    foldRight(empty: Stream[A])( (a, b) => if (p(a)) cons(a, b) else empty)
+    
+  //
+  // 5.5
+  //
+    
+  def headOption: Option[A] =
+    foldRight(None: Option[A])((a, b) => Some(a))
+    
 
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 }

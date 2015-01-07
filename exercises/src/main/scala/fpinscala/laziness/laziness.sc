@@ -37,4 +37,21 @@ object laziness {
   // 5.3
   
   Stream(2, 4, 6, 7, 8, 9).takeWhile(_ < 5).toList//> res16: List[Int] = List(2, 4)
+  
+  // 5.4
+ 
+  Stream(2, 4, 6, 8).forAll(_ % 2 == 0)           //> res17: Boolean = true
+  Stream(2, 4, 5, 6, 8).forAll(_ % 2 == 0)        //> res18: Boolean = false
+  Stream(2, 4, 6, 8, 9).forAll(_ % 2 == 0)        //> res19: Boolean = false
+  
+  // 5.5
+  
+  Stream(2, 4, 6, 7, 8, 9).takeWhileUsingFoldRight(_ < 5).toList
+                                                  //> res20: List[Int] = List(2, 4)
+                                                  
+  // 5.6
+  
+  Stream(1, 2).headOption                         //> res21: Option[Int] = Some(1)
+  Stream(1).headOption                            //> res22: Option[Int] = Some(1)
+  Empty.headOption                                //> res23: Option[Nothing] = None
 }
