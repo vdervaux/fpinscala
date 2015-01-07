@@ -124,7 +124,7 @@ trait Stream[+A] {
   }
   
   //
-  // 5.4
+  // 5.5
   //
   
   def takeWhileUsingFoldRight(p: A => Boolean): Stream[A] =
@@ -133,7 +133,7 @@ trait Stream[+A] {
     foldRight(empty: Stream[A])( (a, b) => if (p(a)) cons(a, b) else empty)
     
   //
-  // 5.5
+  // 5.6
   //
     
   def headOption: Option[A] =
