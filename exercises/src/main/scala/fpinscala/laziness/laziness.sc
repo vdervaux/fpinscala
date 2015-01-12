@@ -54,4 +54,21 @@ object laziness {
   Stream(1, 2).headOption                         //> res21: Option[Int] = Some(1)
   Stream(1).headOption                            //> res22: Option[Int] = Some(1)
   Empty.headOption                                //> res23: Option[Nothing] = None
+  
+  
+  // 5.7
+  
+  // map
+  Stream(1, 2, 3).map(x => x *2).toList           //> res24: List[Int] = List(2, 4, 6)
+  
+  // filter
+  Stream(1, 2, 3, 4, 5, 6).filter(_ % 2 == 0).toList
+                                                  //> res25: List[Int] = List(2, 4, 6)
+  // append
+  Stream(1, 2, 3).append(Stream(4, 5, 6)).toList  //> res26: List[Int] = List(1, 2, 3, 4, 5, 6)
+  
+  // flatMap
+  def threeOf(x: Int) = Stream(x, x, x)           //> threeOf: (x: Int)fpinscala.laziness.Stream[Int]
+  Stream(1, 2, 3).flatMap(threeOf).toList         //> res27: List[Int] = List(1, 1, 1, 2, 2, 2, 3, 3, 3)
+  
 }
