@@ -6,7 +6,8 @@ object laziness {
 
   // Stream 1, 2, 3, 4, 5
   val s12345 = cons(1, cons(2, cons(3, cons (4, cons(5, Empty)))))
-                                                  //> s12345  : fpinscala.laziness.Stream[Int] = Cons(<function0>,<function0>)
+                                                  //> Evaluating: 0 + 1
+                                                  //| s12345  : fpinscala.laziness.Stream[Int] = Cons(<function0>,<function0>)
   Stream(10, 11, 12, 13, 14, 15).toList           //> res0: List[Int] = List(10, 11, 12, 13, 14, 15)
   
   // 5.1
@@ -70,5 +71,37 @@ object laziness {
   // flatMap
   def threeOf(x: Int) = Stream(x, x, x)           //> threeOf: (x: Int)fpinscala.laziness.Stream[Int]
   Stream(1, 2, 3).flatMap(threeOf).toList         //> res27: List[Int] = List(1, 1, 1, 2, 2, 2, 3, 3, 3)
+
   
+  // infinite streams
+  
+  ones.take(5).toList                             //> res28: List[Int] = List(1, 1, 1, 1, 1)
+  ones.exists(_ % 2 != 0)                         //> res29: Boolean = true
+  ones.map(_ + 1).exists(_ % 2 == 0)              //> res30: Boolean = true
+  ones.takeWhile(_ != 1)                          //> res31: fpinscala.laziness.Stream[Int] = Empty
+  ones.forAll(_ != 1)                             //> res32: Boolean = false
+
+  // 5.8
+  
+  constant(3).take(5).toList                      //> res33: List[Int] = List(3, 3, 3, 3, 3)
+  constant1(3).take(5).toList                     //> res34: List[Int] = List(3, 3, 3, 3, 3)
+  
+  // 5.9
+ 
+  from(10).take(10).toList                        //> res35: List[Int] = List(10, 11, 12, 13, 14, 15, 16, 17, 18, 19)
+ 
+  // 5.10
+  
+  fibs.take(5).toList                             //> Evaluating: 1 + 1
+                                                  //| Evaluating: 1 + 2
+                                                  //| Evaluating: 2 + 3
+                                                  //| Evaluating: 3 + 5
+                                                  //| Evaluating: 5 + 8
+                                                  //| res36: List[Int] = List(0, 1, 1, 2, 3)
+  fibs.take(10).toList                            //> Evaluating: 8 + 13
+                                                  //| Evaluating: 13 + 21
+                                                  //| Evaluating: 21 + 34
+                                                  //| Evaluating: 34 + 55
+                                                  //| Evaluating: 55 + 89
+                                                  //| res37: List[Int] = List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34)
 }

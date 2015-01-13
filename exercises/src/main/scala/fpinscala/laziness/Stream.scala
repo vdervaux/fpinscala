@@ -177,7 +177,31 @@ object Stream {
     else cons(as.head, apply(as.tail: _*))
 
   val ones: Stream[Int] = Stream.cons(1, ones)
-  def from(n: Int): Stream[Int] = sys.error("todo")
+  
+  // 5.8
+  
+  def constant1[A](a: A): Stream[A] =
+    cons(a, constant1(a))
+    
+  def constant[A](a: A): Stream[A] = {
+    lazy val tail: Stream[A] = Cons(() => a, () => tail)
+    tail
+  }
+    
+  // 5.9
+  
+  def from(n: Int): Stream[Int] = 
+    cons(n, from(n + 1))
 
+  // 5.10
+
+  val fibs = {
+    def go(x0: Int, x1: Int): Stream[Int] = {
+      println("Evaluating: %s + %s".format(x0, x1))
+      cons(x0, go(x1, x0 + x1))
+    }
+    go(0, 1)
+  } 
+  
   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = sys.error("todo")
 }
