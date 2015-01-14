@@ -104,4 +104,38 @@ object laziness {
                                                   //| Evaluating: 34 + 55
                                                   //| Evaluating: 55 + 89
                                                   //| res37: List[Int] = List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34)
+                                                  
+  // 5.11 and 5.12
+  
+  fibsViaUnfold_skipsFirstTwo.take(10).toList     //> res38: List[Int] = List(1, 2, 3, 5, 8, 13, 21, 34, 55, 89)
+  
+  fibsViaUnfold.take(10).toList                   //> res39: List[Int] = List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34)
+  
+  fibsViaUnfoldWithDebug.take(5).toList           //> Evaluating: 0 + 1
+                                                  //| Evaluating: 1 + 1
+                                                  //| Evaluating: 1 + 2
+                                                  //| Evaluating: 2 + 3
+                                                  //| Evaluating: 3 + 5
+                                                  //| Evaluating: 5 + 8
+                                                  //| res40: List[Int] = List(0, 1, 1, 2, 3)
+  fibsViaUnfoldWithDebug.take(10).toList          //> Evaluating: 0 + 1
+                                                  //| Evaluating: 1 + 1
+                                                  //| Evaluating: 1 + 2
+                                                  //| Evaluating: 2 + 3
+                                                  //| Evaluating: 3 + 5
+                                                  //| Evaluating: 5 + 8
+                                                  //| Evaluating: 8 + 13
+                                                  //| Evaluating: 13 + 21
+                                                  //| Evaluating: 21 + 34
+                                                  //| Evaluating: 34 + 55
+                                                  //| Evaluating: 55 + 89
+                                                  //| res41: List[Int] = List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34)
+                                                  
+  fibsViaUnfold2.take(10).toList                  //> res42: List[Int] = List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34)
+  
+  fromViaUnfold(10).take(10).toList               //> res43: List[Int] = List(10, 11, 12, 13, 14, 15, 16, 17, 18, 19)
+
+  constantViaUnfold(3).take(5).toList             //> res44: List[Int] = List(3, 3, 3, 3, 3)
+  
+  onesViaUnfold.take(5).toList                    //> res45: List[Int] = List(1, 1, 1, 1, 1)
 }

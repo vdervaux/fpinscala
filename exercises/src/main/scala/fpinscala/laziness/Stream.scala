@@ -203,5 +203,62 @@ object Stream {
     go(0, 1)
   } 
   
-  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = sys.error("todo")
+  // 5.11
+  
+  // my version
+  /*
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = { 
+    lazy val (value, nextState) = f(z).get
+    cons(value, unfold(nextState)(f))
+  }
+  */
+  // solution
+   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] =
+    f(z) match {
+      case Some((h,s)) => cons(h, unfold(s)(f))
+      case None => empty
+    }
+
+   
+  // 5.12   
+  
+  // A -> Int
+  // S -> pair for n-2 and n-1 -> (Int, Int)
+  // f: (Int, Int) => Option[(Int, (Int, Int))]
+  //     n-2, n-1               n, (n-1, n-2)
+  def fibsViaUnfold_skipsFirstTwo = 
+    unfold(0,1)(prev => Some((prev._1 + prev._2 , (prev._2 , prev._1 + prev._2 )) ))
+
+  // A -> Int
+  // S -> seed: pair for current and next values -> (Int, Int)
+  // f: (Int, Int) => Option[(Int, (Int, Int))]
+  //     curr, next           curr, (next, curr+next)
+  def fibsViaUnfold = 
+    unfold(0,1)(p => Some((p._1, (p._2 , p._1 + p._2 )) ))
+  
+  def fibsViaUnfoldWithDebug = {
+    def add(a: Int, b: Int) = {
+      println("Evaluating: %s + %s".format(a, b))
+      a + b
+    }
+    unfold(0,1)(p => Some((p._1, (p._2 , add(p._1, p._2) )) ))
+  }
+  
+  // using a case for the function literal
+  def fibsViaUnfold2 = 
+    unfold(0,1){ case (x0, x1) => Some((x0, (x1 , x0 + x1)) )}
+      
+  // from via unfold
+  // initial state: n
+  // next value: n
+  // next state: n + 1
+  def fromViaUnfold(n: Int) = 
+    unfold(n)(n => Some((n, n+1)) )    
+  
+  // constant via unfold
+  def constantViaUnfold[A](a: A) = 
+    unfold(a)(a => Some((a,a)))
+    
+  // ones via unfold  
+  val onesViaUnfold = unfold(1)(_ => Some((1, 1)))  
 }
