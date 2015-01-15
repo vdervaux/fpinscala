@@ -154,7 +154,47 @@ trait Stream[+A] {
   
   def flatMap[B](f: A => Stream[B]): Stream[B] = 
     foldRight(empty[B])((a, b) => f(a) append b)
+    
+
+  // 5.13
+
+  def mapViaUnfold[B](f: A => B): Stream[B] =
+    unfold(this) { // initial state is the stream itself: this
+      case Cons(h, t) => Some((f(h()), t())) // next value is f(h) and next state is t
+      case _ => None
+    }
+
+  def takeViaUnfold(n: Int): Stream[A] =
+    // the state if a pair containing a stream and the number of elements to take from it
+    unfold((this, n)) {
+      case (Cons(h, t), n) if n > 0 => Some((h(), (t(), n - 1)))
+      case _ => None
+    }
+    
+  def takeWhileViaUnfold(p: A => Boolean): Stream[A] =
+    unfold(this) {
+    case Cons(h, t) if p(h()) => Some((h(), t())) 
+    case _ => None
+  }
+    
+  // Reminder: zipWith for List is zipWith[A,B](a1: List[A], a2: List[A])(f: (A,A) => B): List[B]
   
+  def zipWith[B,C](s2: Stream[B])(f: (A,B) => C): Stream[C] =
+    unfold(this, s2) {
+    case (Empty, Empty) => None
+    case (_, Empty) => sys.error("lengths did not match")
+    case (Empty, _) => sys.error("lengths did not match")
+    case (Cons(h1, t1), Cons(h2, t2)) => Some(f(h1(), h2()), (t1(), t2()))
+  }
+  
+  def zipAll[B](s2: Stream[B]): Stream[(Option[A],Option[B])] =
+    unfold(this, s2) {
+    case (Empty, Empty) => None
+    case (Cons(h,t), Empty) => Some( (Some(h()), None), (t(), Empty) )
+    case (Empty, Cons(h,t)) => Some( (None, Some(h())), (Empty, t()) )
+    case (Cons(h1,t1), Cons(h2,t2)) => Some( (Some(h1()), Some(h2())), (t1(), t2()) )
+  }
+    
     
 
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
@@ -261,4 +301,6 @@ object Stream {
     
   // ones via unfold  
   val onesViaUnfold = unfold(1)(_ => Some((1, 1)))  
+  
+  
 }
