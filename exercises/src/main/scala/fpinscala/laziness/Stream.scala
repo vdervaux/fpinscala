@@ -182,8 +182,8 @@ trait Stream[+A] {
   def zipWith[B,C](s2: Stream[B])(f: (A,B) => C): Stream[C] =
     unfold(this, s2) {
     case (Empty, Empty) => None
-    case (_, Empty) => sys.error("lengths did not match")
-    case (Empty, _) => sys.error("lengths did not match")
+    case (_, Empty) => None
+    case (Empty, _) => None
     case (Cons(h1, t1), Cons(h2, t2)) => Some(f(h1(), h2()), (t1(), t2()))
   }
   
@@ -196,8 +196,36 @@ trait Stream[+A] {
   }
     
     
+  // 5.14
 
-  def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
+  def startsWith[B](s: Stream[B]): Boolean =
+    this.zipWith(s)(_ == _).forAll(_ == true)
+    
+  // solution:
+  def startsWith2[A](s: Stream[A]): Boolean = 
+    zipAll(s).takeWhile(!_._2.isEmpty) forAll {
+      case (h,h2) => h == h2
+    }
+
+  // 5.15
+
+  def tails1: Stream[Stream[A]] =
+    unfold(this) {
+      case Empty => None
+      case Cons(h, t) => Some(Cons(h, t), t())
+    }
+
+  // solution:
+  def tails: Stream[Stream[A]] =
+    unfold(this) {
+      case Empty => None
+      case s => Some((s, s drop 1))
+    } append (Stream(empty))
+
+  def hasSubsequence[A](s: Stream[A]): Boolean =
+    tails exists (_ startsWith s)
+
+
 }
 
 case object Empty extends Stream[Nothing]

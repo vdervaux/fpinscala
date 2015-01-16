@@ -153,4 +153,37 @@ object laziness {
                                                   //| ,Some(20)), (Some(3),Some(30)))
   Stream(1, 2).zipAll(Stream(10, 20, 30)).toList  //> res51: List[(Option[Int], Option[Int])] = List((Some(1),Some(10)), (Some(2)
                                                   //| ,Some(20)), (None,Some(30)))
+                                                  
+  // 5.14
+  
+  Stream(1, 2, 3, 4).zipWith(Stream(1, 2, 3))(_ == _).toList
+                                                  //> res52: List[Boolean] = List(true, true, true)
+  Stream(1, 2, 3, 4).zipWith(Stream(1, 4, 3))(_ == _).toList
+                                                  //> res53: List[Boolean] = List(true, false, true)
+  
+  Stream(1, 2, 3, 4).zipWith(Stream(1, 2, 3))(_ == _).forAll(_ == true)
+                                                  //> res54: Boolean = true
+  
+  Stream(1, 2, 3, 4).zipWith(Stream(1, 4, 3))(_ == _).forAll(_ == true)
+                                                  //> res55: Boolean = false
+  Stream(1, 2, 3, 4).startsWith(Stream(1, 2, 3))  //> res56: Boolean = true
+  
+  Stream('a', 'b', 'c').startsWith(Stream('a', 'b'))
+                                                  //> res57: Boolean = true
+  Stream('a', 'b', 'c').startsWith(Stream('a', 'b', 'c'))
+                                                  //> res58: Boolean = true
+  
+  
+  Stream('a', 'b', 'c').startsWith2(Stream('a', 'b', 'c'))
+                                                  //> res59: Boolean = true
+
+  // 5.15
+  
+  Stream(1,2,3).tails1.map(_.toList).toList       //> res60: List[List[Int]] = List(List(1, 2, 3), List(2, 3), List(3))
+  
+  Stream(1,2,3).tails.map(_.toList).toList        //> res61: List[List[Int]] = List(List(1, 2, 3), List(2, 3), List(3), List())
+  
+  Stream(1, 2, 3, 4, 5, 6, 7).hasSubsequence(Stream(3, 4, 5, 6))
+                                                  //> res62: Boolean = true
+  
 }
