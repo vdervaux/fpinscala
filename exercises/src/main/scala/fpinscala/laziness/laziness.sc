@@ -186,4 +186,17 @@ object laziness {
   Stream(1, 2, 3, 4, 5, 6, 7).hasSubsequence(Stream(3, 4, 5, 6))
                                                   //> res62: Boolean = true
   
+  // 5.16
+  
+  Stream(1, 2, 3).scanRight(0)(_ + _).toList      //> res63: List[Int] = List(6, 5, 3, 0)
+  
+  def add(a: Int, b: => Int) = {
+    println("Evaluating: %s + %s".format(a, b))
+    a + b
+  }                                               //> add: (a: Int, b: => Int)Int
+  
+  Stream(1, 2, 3).scanRight(0)(add).toList        //> Evaluating: 3 + 0
+                                                  //| Evaluating: 2 + 3
+                                                  //| Evaluating: 1 + 5
+                                                  //| res64: List[Int] = List(6, 5, 3, 0)
 }

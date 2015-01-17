@@ -226,6 +226,20 @@ trait Stream[+A] {
     tails exists (_ startsWith s)
 
 
+  // 5.16
+  def scanRight[B](z: B)(f: (A, => B) => B): Stream[B] =
+    // initial value is (B, Stream[B]) which is the current result and the stream of previous results
+    foldRight(z, Stream(z))((a, p) => {
+      // a is the value read from 'this' stream
+      // p is the pair (previous result, stream of previous results)
+      // p is passed by name and then sent by name to two functions, so use lazy to evaluate it only once
+      lazy val lp = p
+      val result = f(a, lp._1)  // compute new result
+      (result, cons(result, lp._2)) // add new result to stream of results
+    })._2 // return the stream of results
+    
+    
+  // def foldRight[B](z: => B)(f: (A, => B) => B): B  
 }
 
 case object Empty extends Stream[Nothing]
