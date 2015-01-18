@@ -30,10 +30,40 @@ object RNG {
       (f(a), rng2)
     }
 
-  def nonNegativeInt(rng: RNG): (Int, RNG) = ???
+    
+  // 6.1
+    
+  // generate integer between 0 and Int.maxValue (inclusive)  
+    
+  def nonNegativeInt1(rng: RNG): (Int, RNG) = {
+    rng.nextInt match {
+      case (n, rng2) if n > 0 => (n, rng2)
+      case (_, rng2) => nonNegativeInt(rng2)
+    }
+  }
 
-  def double(rng: RNG): (Double, RNG) = ???
+  // We need to be quite careful not to skew the generator.
+  // Since `Int.Minvalue` is 1 smaller than `-(Int.MaxValue)`,
+  // it suffices to increment the negative numbers by 1 and make them positive.
+  // This maps Int.MinValue to Int.MaxValue and -1 to 0.
+  def nonNegativeInt(rng: RNG): (Int, RNG) = {
+    val (i, r) = rng.nextInt
+    (if (i < 0) -(i + 1) else i, r)
+  }
 
+
+  // 6.2
+  
+  // generate double between 0 and 1 (1 excluded)
+  
+  def double(rng: RNG): (Double, RNG) = { 
+    val (n, rng2) = nonNegativeInt(rng)
+    // 0 <= n <= Int.maxValue
+    val d = n.toDouble / (Int.MaxValue.toDouble + 1) 
+    (d, rng2) 
+  }
+
+  
   def intDouble(rng: RNG): ((Int,Double), RNG) = ???
 
   def doubleInt(rng: RNG): ((Double,Int), RNG) = ???
