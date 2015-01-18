@@ -62,51 +62,53 @@ object RNG {
     (d, rng2) 
   }
 
-  
+
   // 6.3
-  
-  def intDouble(rng: RNG): ((Int,Double), RNG) = { 
+
+  def intDouble(rng: RNG): ((Int, Double), RNG) = {
     val (i, rng2) = rng.nextInt
     val (d, rng3) = double(rng)
     ((i, d), rng3)
   }
-  
-  def doubleInt(rng: RNG): ((Double,Int), RNG) = {
+
+  def doubleInt(rng: RNG): ((Double, Int), RNG) = {
     val ((i, d), rng2) = intDouble(rng)
     ((d, i), rng2)
   }
 
-  def double3(rng: RNG): ((Double,Double,Double), RNG) = { 
+  def double3(rng: RNG): ((Double, Double, Double), RNG) = {
     val (d1, rng1) = double(rng)
     val (d2, rng2) = double(rng1)
     val (d3, rng3) = double(rng2)
     ((d1, d2, d3), rng3)
   }
 
-  
+
   // 6.4
-  
+
   def intsNotTailRec(count: Int)(rng: RNG): (List[Int], RNG) = count match {
     case 0 => (Nil, rng)
     case n => {
       val (i, rng2) = rng.nextInt
-      val (list, rng3) = intsNotTailRec(n-1)(rng2)
-      (i::list, rng3)
+      val (list, rng3) = intsNotTailRec(n - 1)(rng2)
+      (i :: list, rng3)
     }
   }
-  
+
   def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
     @annotation.tailrec
     def go(count: Int, xs: List[Int], rng: RNG): (List[Int], RNG) =
       count match {
-      case 0 => (xs, rng)
-      case n => {
-        val (x, rng2) = rng.nextInt
-        go(n - 1, x::xs, rng2)
+        case 0 => (xs, rng)
+        case n => {
+          val (x, rng2) = rng.nextInt
+          go(n - 1, x :: xs, rng2)
+        }
       }
-    }
-    val (xs, rng2) = go(count, Nil, rng)
-    (xs.reverse, rng2)
+    go(count, Nil, rng)
+    // or we can reverse to compare to the non-recursive version
+    // val (xs, rng2) = go(count, Nil, rng)
+    // (xs.reverse, rng2) 
   }
     
 

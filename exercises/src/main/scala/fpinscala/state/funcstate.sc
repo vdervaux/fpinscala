@@ -31,18 +31,18 @@ object funcstate {
                                                   //| 15))
 
   // 6.3
-  
+
   intDouble(rng)                                  //> res7: ((Int, Double), fpinscala.state.RNG) = ((4616986,0.00214995164424181),
                                                   //| Simple(302578847015))
   doubleInt(rng)                                  //> res8: ((Double, Int), fpinscala.state.RNG) = ((0.00214995164424181,4616986),
                                                   //| Simple(302578847015))
   double3(rng)                                    //> res9: ((Double, Double, Double), fpinscala.state.RNG) = ((0.0021499516442418
                                                   //| 1,0.4548024316318333,0.01419649226590991),Simple(1997978702265))
- 
+
   // 6.4
 
   rng.nextInt._1                                  //> res10: Int = 4616986
   intsNotTailRec(4)(rng)._1                       //> res11: List[Int] = List(4616986, -976680786, 30486735, -1874720295)
-  ints(4)(rng)._1                                 //> res12: List[Int] = List(4616986, -976680786, 30486735, -1874720295)
+  ints(4)(rng)._1                                 //> res12: List[Int] = List(-1874720295, 30486735, -976680786, 4616986)
   
 }
