@@ -1,6 +1,5 @@
 package fpinscala.state
 
-
 trait RNG {
   def nextInt: (Int, RNG) // Should generate a random `Int`. We'll later define other functions in terms of `nextInt`.
 }
@@ -64,13 +63,52 @@ object RNG {
   }
 
   
-  def intDouble(rng: RNG): ((Int,Double), RNG) = ???
+  // 6.3
+  
+  def intDouble(rng: RNG): ((Int,Double), RNG) = { 
+    val (i, rng2) = rng.nextInt
+    val (d, rng3) = double(rng)
+    ((i, d), rng3)
+  }
+  
+  def doubleInt(rng: RNG): ((Double,Int), RNG) = {
+    val ((i, d), rng2) = intDouble(rng)
+    ((d, i), rng2)
+  }
 
-  def doubleInt(rng: RNG): ((Double,Int), RNG) = ???
+  def double3(rng: RNG): ((Double,Double,Double), RNG) = { 
+    val (d1, rng1) = double(rng)
+    val (d2, rng2) = double(rng1)
+    val (d3, rng3) = double(rng2)
+    ((d1, d2, d3), rng3)
+  }
 
-  def double3(rng: RNG): ((Double,Double,Double), RNG) = ???
-
-  def ints(count: Int)(rng: RNG): (List[Int], RNG) = ???
+  
+  // 6.4
+  
+  def intsNotTailRec(count: Int)(rng: RNG): (List[Int], RNG) = count match {
+    case 0 => (Nil, rng)
+    case n => {
+      val (i, rng2) = rng.nextInt
+      val (list, rng3) = intsNotTailRec(n-1)(rng2)
+      (i::list, rng3)
+    }
+  }
+  
+  def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
+    @annotation.tailrec
+    def go(count: Int, xs: List[Int], rng: RNG): (List[Int], RNG) =
+      count match {
+      case 0 => (xs, rng)
+      case n => {
+        val (x, rng2) = rng.nextInt
+        go(n - 1, x::xs, rng2)
+      }
+    }
+    val (xs, rng2) = go(count, Nil, rng)
+    (xs.reverse, rng2)
+  }
+    
 
   def map2[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = ???
 
