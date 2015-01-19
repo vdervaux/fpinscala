@@ -45,4 +45,32 @@ object funcstate {
   intsNotTailRec(4)(rng)._1                       //> res11: List[Int] = List(4616986, -976680786, 30486735, -1874720295)
   ints(4)(rng)._1                                 //> res12: List[Int] = List(-1874720295, 30486735, -976680786, 4616986)
   
+  
+  // 6.5
+  
+  rng.nextInt                                     //> res13: (Int, fpinscala.state.RNG) = (4616986,Simple(302578847015))
+  int                                             //> res14: fpinscala.state.RNG.Rand[Int] = <function1>
+  int(rng)                                        //> res15: (Int, fpinscala.state.RNG) = (4616986,Simple(302578847015))
+  
+  doubleViaMap(rng)                               //> res16: (Double, fpinscala.state.RNG) = (0.00214995164424181,Simple(302578847
+                                                  //| 015))
+
+  // 6.6
+  
+  map2(int, double)(_ + _)                        //> res17: fpinscala.state.RNG.Rand[Double] = <function1>
+
+  val (i, rng_6_6_1) = int(rng)                   //> i  : Int = 4616986
+                                                  //| rng_6_6_1  : fpinscala.state.RNG = Simple(302578847015)
+  val (d, rng_6_6_2) = double(rng_6_6_1)          //> d  : Double = 0.4548024316318333
+                                                  //| rng_6_6_2  : fpinscala.state.RNG = Simple(217467224744870)
+  i + d                                           //> res18: Double = 4616986.454802431
+  map2(int, double)(_ + _)(rng)._1                //> res19: Double = 4616986.454802431
+  
+  both(int, double)(rng)                          //> res20: ((Int, Double), fpinscala.state.RNG) = ((4616986,0.4548024316318333),
+                                                  //| Simple(217467224744870))
+  randIntDouble(rng)                              //> res21: ((Int, Double), fpinscala.state.RNG) = ((4616986,0.4548024316318333),
+                                                  //| Simple(217467224744870))
+  // different result since Double is generated before Int in this case
+  randDoubleInt(rng)                              //> res22: ((Double, Int), fpinscala.state.RNG) = ((0.00214995164424181,-9766807
+                                                  //| 86),Simple(217467224744870))
 }

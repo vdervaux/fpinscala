@@ -110,9 +110,32 @@ object RNG {
     // val (xs, rng2) = go(count, Nil, rng)
     // (xs.reverse, rng2) 
   }
-    
 
-  def map2[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = ???
+  // 6.5
+
+  def doubleViaMap: Rand[Double] =
+    map(nonNegativeInt)(_.toDouble / (Int.MaxValue.toDouble + 1))
+
+  // 6.6
+
+  // Reminder: Rand[+X] = RNG => (X, RNG)
+  // so map2 has type RNG => (C, RNG)  
+  def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] =
+    rng => {
+      val (a, rng2) = ra(rng)
+      val (b, rng3) = rb(rng2)
+      (f(a, b), rng3)
+    }
+
+  def both[A, B](ra: Rand[A], rb: Rand[B]): Rand[(A, B)] =
+    map2(ra, rb)((_, _))
+
+  val randIntDouble: Rand[(Int, Double)] =
+    both(int, double)
+
+  val randDoubleInt: Rand[(Double, Int)] =
+    both(double, int)  
+    
 
   def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = ???
 
