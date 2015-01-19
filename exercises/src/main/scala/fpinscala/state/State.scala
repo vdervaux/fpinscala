@@ -141,7 +141,7 @@ object RNG {
   // fs: List[ RNG => (A, RNG) ] 
   def sequence[A](fs: List[Rand[A]]): Rand[List[A]] =
     fs match {
-      case Nil => unit(List())  // rng => (List(), rng)
+      case Nil => unit(List()) // rng => (List(), rng)
       case r :: rs =>
         // r: RNG => (A, RNG)
         // rs: List[Rand[A]] or List[ RNG => (A, RNG) ]
@@ -154,8 +154,15 @@ object RNG {
           }
         }
     }
-  
-  def intsViaSequence(n: Int) = sequence(List.fill(n)(int))
+
+  // since we have map2, we can use foldRight
+  // reminder:  foldRight[B](z: B)(op: (A, B) ⇒ B): B
+  //               z: start value, type B
+  //               B: result of the binary operator. Here B is Rand[List[A]]
+  def sequenceViaFoldRight[A](fs: List[Rand[A]]): Rand[List[A]] =
+    fs.foldRight(unit(List[A]()))((ra, rb) => map2(ra, rb)(_ :: _))
+
+  def intsViaSequence(n: Int) = sequenceViaFoldRight(List.fill(n)(int))
   
 
   def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = ???
