@@ -134,12 +134,31 @@ object RNG {
     both(int, double)
 
   val randDoubleInt: Rand[(Double, Int)] =
-    both(double, int)  
-    
+    both(double, int)
 
-  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = ???
+  // 6.7
 
-  def flatMap[A,B](f: Rand[A])(g: A => Rand[B]): Rand[B] = ???
+  // fs: List[ RNG => (A, RNG) ] 
+  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] =
+    fs match {
+      case Nil => unit(List())  // rng => (List(), rng)
+      case r :: rs =>
+        // r: RNG => (A, RNG)
+        // rs: List[Rand[A]] or List[ RNG => (A, RNG) ]
+        // return type: Rand[List[A]] or RNG => (List[A], RNG)
+        { rng =>
+          {
+            val (a, rng2) = r(rng)
+            val (as, rng3) = sequence(rs)(rng2)
+            (a :: as, rng3)
+          }
+        }
+    }
+  
+  def intsViaSequence(n: Int) = sequence(List.fill(n)(int))
+  
+
+  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = ???
 }
 
 case class State[S,+A](run: S => (A, S)) {

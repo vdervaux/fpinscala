@@ -73,4 +73,13 @@ object funcstate {
   // different result since Double is generated before Int in this case
   randDoubleInt(rng)                              //> res22: ((Double, Int), fpinscala.state.RNG) = ((0.00214995164424181,-9766807
                                                   //| 86),Simple(217467224744870))
+
+  // 6.7
+
+  val intList = List.fill(4)(int)                 //> intList  : List[fpinscala.state.RNG.Rand[Int]] = List(<function1>, <function
+                                                  //| 1>, <function1>, <function1>)
+  sequence(intList)(rng)._1                       //> res23: List[Int] = List(4616986, -976680786, 30486735, -1874720295)
+  ints(4)(rng)._1                                 //> res24: List[Int] = List(-1874720295, 30486735, -976680786, 4616986)
+  
+  intsViaSequence(4)(rng)._1                      //> res25: List[Int] = List(4616986, -976680786, 30486735, -1874720295)
 }
