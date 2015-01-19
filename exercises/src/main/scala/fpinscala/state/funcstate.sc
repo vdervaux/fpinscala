@@ -83,4 +83,41 @@ object funcstate {
   intsViaSequence(4)(rng)._1                      //> res25: List[Int] = List(4616986, -976680786, 30486735, -1874720295)
   
   sequenceViaFoldRight(intList)(rng)._1           //> res26: List[Int] = List(4616986, -976680786, 30486735, -1874720295)
+  
+  // 6.8
+  
+  nonNegativeInt(rng)                             //> res27: (Int, fpinscala.state.RNG) = (4616986,Simple(302578847015))
+  
+  val (i1, rng6_8_1) = nonNegativeLessThan(10)(rng)
+                                                  //> i1  : Int = 6
+                                                  //| rng6_8_1  : fpinscala.state.RNG = Simple(302578847015)
+  val (i2, rng6_8_2) = nonNegativeLessThan(10)(rng6_8_1)
+                                                  //> i2  : Int = 5
+                                                  //| rng6_8_2  : fpinscala.state.RNG = Simple(217467224744870)
+
+  val (i3, rng6_8_3) = nonNegativeLessThan2(10)(rng)
+                                                  //> i3  : Int = 6
+                                                  //| rng6_8_3  : fpinscala.state.RNG = Simple(302578847015)
+  // 6.9
+  
+  map(int)(_ * 2)(rng)._1                         //> res28: Int = 9233972
+  
+  map2(int, double)(_ + _)(rng)._1                //> res29: Double = 4616986.454802431
+  
+  def rollDieOffByOne: Rand[Int] = nonNegativeLessThan2(6)
+                                                  //> rollDieOffByOne: => fpinscala.state.RNG.Rand[Int]
+  
+  rollDieOffByOne(Simple(12))                     //> res30: (Int, fpinscala.state.RNG) = (4,Simple(302578847015))
+  rollDieOffByOne(Simple(8))                      //> res31: (Int, fpinscala.state.RNG) = (3,Simple(201719231347))
+  rollDieOffByOne(Simple(5))                      //> res32: (Int, fpinscala.state.RNG) = (0,Simple(126074519596))
+
+
+  def rollDie: Rand[Int] = map(nonNegativeLessThan2(6))(_ + 1)
+                                                  //> rollDie: => fpinscala.state.RNG.Rand[Int]
+  rollDie(Simple(12))                             //> res33: (Int, fpinscala.state.RNG) = (5,Simple(302578847015))
+  rollDie(Simple(8))                              //> res34: (Int, fpinscala.state.RNG) = (4,Simple(201719231347))
+  rollDie(Simple(5))                              //> res35: (Int, fpinscala.state.RNG) = (1,Simple(126074519596))
+
+  
+
 }

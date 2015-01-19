@@ -164,8 +164,58 @@ object RNG {
 
   def intsViaSequence(n: Int) = sequenceViaFoldRight(List.fill(n)(int))
   
+  
+  // 6.8
 
-  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = ???
+  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = 
+    rng => {
+      val (a, rng2) = f(rng)
+      g(a)(rng2)
+    }
+
+  // nonNegativeInt: Rand[Int] or RNG => (Int, RNG) 
+  def nonNegativeLessThan(n: Int): Rand[Int] = {
+    // helper: Int => Rand[Int]
+    def helper(i: Int) = {
+      rng: RNG =>
+        {
+          val mod = i % n
+          if (i + (n - 1) - mod >= 0) (mod, rng)
+          else nonNegativeInt(rng)
+        }
+    }
+    flatMap(nonNegativeInt)(helper)
+  }
+
+  def nonNegativeLessThan2(n: Int): Rand[Int] = {
+    // helper: Int => Rand[Int]
+    def helper(i: Int) = {
+      val mod = i % n
+      if (i + (n - 1) - mod >= 0) unit(mod)
+      else nonNegativeLessThan2(n)
+    }
+    flatMap(nonNegativeInt)(helper)
+  }
+
+  
+  // 6.9
+
+  def mapViaflatMap[A, B](s: Rand[A])(f: A => B): Rand[B] = {
+    // need function g: A => Rand[B]
+    // have f: A => B
+    // have unit(s: B) => Rand[B]
+    def g = { a: A => unit(f(a)) }
+    flatMap(s)(g)
+  }
+
+  def map2ViaflatMap[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] =
+    {
+      // helper: A => Rand[C]
+      // map[B,C](s: Rand[B])(f: B => C): Rand[C] 
+      def helper = { a: A => map(rb) { b: B => f(a, b) } }
+      flatMap(ra)(helper)
+    }
+
 }
 
 case class State[S,+A](run: S => (A, S)) {
