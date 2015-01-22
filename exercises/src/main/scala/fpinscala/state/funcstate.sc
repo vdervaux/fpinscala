@@ -3,7 +3,7 @@ package fpinscala.state
 import RNG._
 
 object funcstate {
-  
+ 
   // 6.1
   
   val rng = Simple(12)                            //> rng  : fpinscala.state.RNG.Simple = Simple(12)
@@ -119,5 +119,21 @@ object funcstate {
   rollDie(Simple(5))                              //> res35: (Int, fpinscala.state.RNG) = (1,Simple(126074519596))
 
   
-
+  // 6.11
+  
+  // locked, 5 candies, 10 coins
+  def initialState = Machine(true, 5, 10)         //> initialState: => fpinscala.state.Machine
+  
+  def buyOne = List(Coin, Turn)                   //> buyOne: => List[Product with Serializable with fpinscala.state.Input]
+  
+  Candy.simulateMachine(buyOne).run(initialState) //> res36: ((Int, Int), fpinscala.state.Machine) = ((11,4),Machine(true,4,11))
+  
+  // buy 4 candies
+  Candy.simulateMachine(List(Coin, Turn, Coin, Turn, Coin, Turn, Coin, Turn)).run(initialState)
+                                                  //> res37: ((Int, Int), fpinscala.state.Machine) = ((14,1),Machine(true,1,14))
+  
+  // buy 4 candies with intermediate actions that do nothing
+  Candy.simulateMachine(List(Coin, Coin, Turn, Coin, Turn, Turn, Coin, Turn, Coin, Turn)).run(initialState)
+                                                  //> res38: ((Int, Int), fpinscala.state.Machine) = ((14,1),Machine(true,1,14))
+  
 }
