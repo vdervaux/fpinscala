@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 Working through the book Functional Programming in Scala
 
